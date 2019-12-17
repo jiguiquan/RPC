@@ -31,16 +31,32 @@ public class ProcessorHandler implements Runnable {
     public void run() {  //在这里处理真正的业务
         System.out.println("开始处理客户端请求");
         ObjectInputStream inputStream = null;
+        ObjectOutputStream objectOutputStream = null;
         try {
             inputStream = new ObjectInputStream(socket.getInputStream());  //获取网络Socket输入流
             RPCRequest rpcRequest = (RPCRequest) inputStream.readObject();  //readObject()就是java原生反序列化的过程
             Object result = invoke(rpcRequest);
             //将这个结果result返回给客户端
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());  //建立一个socket通信管道
+            objectOutputStream = new ObjectOutputStream(socket.getOutputStream());  //建立一个socket通信管道
             objectOutputStream.writeObject(result);  //将结果写进去
             objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+        } finally {
+            if (objectOutputStream != null){
+                try {
+                    objectOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (inputStream != null){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

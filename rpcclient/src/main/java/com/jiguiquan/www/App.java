@@ -8,6 +8,10 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        RpcClientProxy proxy = new RpcClientProxy();
+        HelloService helloService = proxy.clientProxy(HelloService.class, "localhost", 9090);
+        User user = new User();
+        user.setName("吉桂权");
+        System.out.println(helloService.saveUser(user));
     }
 }
