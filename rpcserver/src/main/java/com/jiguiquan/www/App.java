@@ -9,6 +9,6 @@ public class App
     {
         HelloService helloService = new HelloServiceImpl();
         RpcServerProxy rpcServerProxy = new RpcServerProxy();
-        rpcServerProxy.publisher(helloService, 8080);
+        rpcServerProxy.publisher(helloService, 9090);
     }
 }
